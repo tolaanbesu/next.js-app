@@ -1,36 +1,50 @@
 
-import Post from "./components/post";
+"use client";
 
+import { useState, useEffect } from "react";
+import Navbar from "./components/home/Navbar";
+import FeaturedArticle from "./components/home/FeaturedArticle";
+import ArticleList from "./components/home/ArticleList";
+import Footer from "./components/home/Footer"
 
-export default async function Home() {
+export default function Home() {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  async function  getPosts(){
-
-    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}`: "http://localhost:3000";
-
-   const res = await fetch(`${baseUrl}/api/posts`)
-   const posts = await res.json();
-  
-   
-    return posts;
+  async function getNews() {
+    try {
+      const res = await fetch("/api/news", { cache: "no-store" });
+      const data = await res.json();
+      setArticles(data.articles || []);
+    } catch (error) {
+      console.error("Failed to load news:", error);
+      setArticles([]);
+    } finally {
+      setLoading(false);
+    }
   }
-  const posts = await getPosts();
+
+  useEffect(() => {
+    getNews();
+  }, []);
+
+  function handleSearchResults(results) {
+    setArticles(results);
+  }
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1 className="text-blue-500 text-4xl mb-2">Feed</h1>
-        {posts.map((post) =>{
-          return (
-            <Post 
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            content={post.content}
-            author={post.author}
-          />)} 
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <Navbar onSearchResults={handleSearchResults} />
+      <main className="flex-1 px-4 sm:px-12 py-6">
+        <FeaturedArticle />
+        {loading ? (
+          <p className="text-gray-500">Loading articles...</p>
+        ) : (
+          <ArticleList articles={articles} />
         )}
       </main>
+      <Footer />
+      
     </div>
   );
 }
