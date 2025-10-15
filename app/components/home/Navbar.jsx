@@ -170,8 +170,8 @@ export default function Navbar({ onSearchResults }) {
     { label: "Home", icon: <Home className="w-5 h-5" />, action: () => router.push("/") },
     { label: "Categories", icon: <FolderOpen className="w-5 h-5" />, action: () => router.push("/category") },
     { label: "Techblogs", icon: <Cpu className="w-5 h-5" />, action: () => router.push("/techblog") },
-    { label: "About", icon: <Info className="w-5 h-5" />, action: () => alert("About page") },
-    { label: "Contact", icon: <Mail className="w-5 h-5" />, action: () => alert("Contact page") },
+    { label: "About", icon: <Info className="w-5 h-5" />, action: () => router. push("/about") },
+    { label: "Contact", icon: <Mail className="w-5 h-5" />, action: () =>router.push("/contact") },
   ];
 
   return (

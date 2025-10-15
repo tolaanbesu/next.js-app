@@ -46,12 +46,9 @@ export default function TechBlog() {
         // Fetch related YouTube videos for all articles
         const videoPromises = combinedArticles.map(async (art) => {
           if (!art.title) return null;
-          const youtubeRes = await fetch(
-            `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
-              art.title + " technology news"
-            )}&type=video&maxResults=1&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-          );
+          const youtubeRes = await fetch(`/api/youtube?q=${encodeURIComponent(art.title+"technology news")}`);
           const youtubeData = await youtubeRes.json();
+          console.log(youtubeData);
           return youtubeData.items?.[0]?.id?.videoId || null;
         });
 
